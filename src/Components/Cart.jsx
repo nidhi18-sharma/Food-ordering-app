@@ -1,34 +1,44 @@
 import CartContext from "../Store/CartContext.jsx";
 import Modal from "./UI/Modal.jsx";
 import { useContext } from "react";
-import { currencyFormatter } from "../util/priceFormatter"
+import { currencyFormatter } from "../util/priceFormatter";
 import Button from "./UI/Button.jsx";
 import CartBtn from "../Store/CartBtnContext.jsx";
+import CartItem from "./CartItem.jsx";
 
 export default function Cart() {
   const ctx = useContext(CartContext);
-  const ctxCart =useContext(CartBtn);
+  const ctxCart = useContext(CartBtn);
   const cartTotal = ctx.items.reduce(
     (acc, item) => acc + item.price * item.quantity,
     0,
   );
-function handleClose(){
+  function handleClose() {
     ctxCart.hideCart();
-}
+  }
 
   return (
-    <Modal className="cart" open={ctxCart.progress==='cart'}>
+    <Modal className="cart" open={ctxCart.progress === "cart"}>
       <h2>Your Cart</h2>
       <ul>
         {ctx.items.map((item) => (
-          <li key={item.id}>
-            {item.name} - {item.quantity}
-          </li>
+          <CartItem
+            key={item.id}
+            name={item.name}
+            qty={item.quantity}
+            price={item.price}
+            onDecrease={() => ctx.removeItem(item.id)}
+            onIncrease={() => ctx.addItem(item)}
+          />
         ))}
       </ul>
       <p className="cart-total">{currencyFormatter.format(cartTotal)}</p>
-      <Button onClick={handleClose} textOnly>Close</Button>
-      <Button>Checkout</Button>
+      <p className="modal-actions">
+        <Button onClick={handleClose} textOnly>
+          Close
+        </Button>
+        {ctx.items.length > 0 ? <Button>Checkout</Button> : null}
+      </p>
     </Modal>
   );
 }
