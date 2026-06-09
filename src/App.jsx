@@ -6,9 +6,8 @@ function App() {
   return (
     <CartContextProvider>
       <Header />
-      <Meals/>
-      </CartContextProvider>
-    
+      <Meals />
+    </CartContextProvider>
   );
 }
 
