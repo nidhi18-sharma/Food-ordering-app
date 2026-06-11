@@ -5,9 +5,11 @@ import Input from "./UI/Input.jsx";
 import Button from "./UI/Button.jsx";
 import CartBtn from "../Store/CartBtnContext.jsx";
 import Modal from "./UI/Modal.jsx";
+import useHttp from "../Hooks/useHttp.js";
 
 export default function Checkout() {
   const ctx = useContext(CartContext);
+  const {sendReq } = useHttp();
   const ctxCart=useContext(CartBtn);
   const cartTotal = ctx.items.reduce(
     (acc, item) => acc + item.price * item.quantity,
@@ -17,10 +19,11 @@ export default function Checkout() {
     ctxCart.hideCheckout();
   }
 function handleSubmit(e){
+
 e.preventDefault();
 const fd= new FormData(e.target);
 const customerData=Object.fromEntries(fd.entries());
-fetch('http://localhost:3000/orders',{
+sendReq('http://localhost:3000/orders',{
     method:'POST',
     headers:{
         'Content-Type':'application/json' 
